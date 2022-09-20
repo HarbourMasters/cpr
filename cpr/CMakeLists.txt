@@ -33,6 +33,22 @@ add_library(cpr::cpr ALIAS cpr)
 
 target_link_libraries(cpr PUBLIC CURL::libcurl) # todo should be private, but first dependencys in ssl_options need to be removed
 
+################################################################################
+# MSVC runtime library
+################################################################################
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    get_property(MSVC_RUNTIME_LIBRARY_DEFAULT TARGET ${LIBRARY_NAME} PROPERTY MSVC_RUNTIME_LIBRARY)
+    string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
+        $<$<CONFIG:Debug>:
+                MultiThreadedDebug
+        >
+        $<$<CONFIG:Release>:
+                MultiThreaded
+        >
+        $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
+    )
+endif()
+
 # Fix missing OpenSSL includes for Windows since in 'ssl_ctx.cpp' we include OpenSSL directly
 if(SSL_BACKEND_USED STREQUAL "OpenSSL")
         target_link_libraries(cpr PRIVATE OpenSSL::SSL)
