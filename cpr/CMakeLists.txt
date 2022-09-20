@@ -37,7 +37,7 @@ target_link_libraries(cpr PUBLIC CURL::libcurl) # todo should be private, but fi
 # MSVC runtime library
 ################################################################################
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    get_property(MSVC_RUNTIME_LIBRARY_DEFAULT TARGET ${LIBRARY_NAME} PROPERTY MSVC_RUNTIME_LIBRARY)
+    get_property(MSVC_RUNTIME_LIBRARY_DEFAULT TARGET cpr PROPERTY MSVC_RUNTIME_LIBRARY)
     string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
         $<$<CONFIG:Debug>:
                 MultiThreadedDebug
