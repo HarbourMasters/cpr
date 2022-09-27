@@ -36,7 +36,7 @@ target_link_libraries(cpr PUBLIC CURL::libcurl) # todo should be private, but fi
 ################################################################################
 # MSVC runtime library
 ################################################################################
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if (CMAKE_SYSTEM_NAME MATCHES "Windows" AND CPR_MSVC_USE_MTD)
     get_property(MSVC_RUNTIME_LIBRARY_DEFAULT TARGET cpr PROPERTY MSVC_RUNTIME_LIBRARY)
     string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
         $<$<CONFIG:Debug>:

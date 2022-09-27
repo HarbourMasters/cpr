@@ -56,6 +56,7 @@ cpr_option(CPR_CURL_NOSIGNAL "Set to ON to disable use of signals in libcurl." O
 cpr_option(CURL_VERBOSE_LOGGING "Curl verbose logging during building curl" OFF)
 cpr_option(CPR_USE_SYSTEM_GTEST "If ON, this project will look in the system paths for an installed gtest library. If none is found it will use the build in one." OFF)
 cpr_option(CPR_USE_SYSTEM_CURL "If enabled we will use the curl lib already installed on this system." OFF)
+cpr_option(CPR_MSVC_USE_MTD "If enabled we will use multithreaded builds on msvc" OFF)
 cpr_option(CPR_ENABLE_SSL "Enables or disables the SSL backend. Required to perform HTTPS requests." ON)
 cpr_option(CPR_FORCE_OPENSSL_BACKEND "Force to use the OpenSSL backend. If CPR_FORCE_OPENSSL_BACKEND, CPR_FORCE_DARWINSSL_BACKEND, CPR_FORCE_MBEDTLS_BACKEND, and CPR_FORCE_WINSSL_BACKEND are set to to OFF, cpr will try to automatically detect the best available SSL backend (WinSSL - Windows, OpenSSL - Linux, DarwinSSL - Mac ...)." OFF)
 cpr_option(CPR_FORCE_WINSSL_BACKEND "Force to use the WinSSL backend. If CPR_FORCE_OPENSSL_BACKEND, CPR_FORCE_DARWINSSL_BACKEND, CPR_FORCE_MBEDTLS_BACKEND, and CPR_FORCE_WINSSL_BACKEND are set to to OFF, cpr will try to automatically detect the best available SSL backend (WinSSL - Windows, OpenSSL - Linux, DarwinSSL - Mac ...)." OFF)
@@ -374,23 +375,6 @@ endif()
 
 add_subdirectory(cpr)
 add_subdirectory(include)
-
-################################################################################
-# MSVC runtime library
-################################################################################
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    get_property(MSVC_RUNTIME_LIBRARY_DEFAULT TARGET cpr PROPERTY MSVC_RUNTIME_LIBRARY)
-    string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
-        $<$<CONFIG:Debug>:
-                MultiThreadedDebug
-        >
-        $<$<CONFIG:Release>:
-                MultiThreaded
-        >
-        $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
-    )
-    set_target_properties(cpr PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
-endif()
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND CPR_BUILD_TESTS)
     # Disable linting for test since they are currently not up to the standard
